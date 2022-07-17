@@ -91,6 +91,8 @@ def add_tag():
       def display_text():
          str = entry.get()
          str = str.lower()
+         str = str.strip()
+         str = str.replace(" ","")
          entry.delete(0, END)
          if len(str) == 0 :
             mb.showerror(title='Error!', message='Length of tag cannot be zero.')
@@ -102,8 +104,8 @@ def add_tag():
             label.pack()
 
       entry.icursor(0)
-      Button(addtag_wn, text = "Add tag", width = 20, command=display_text, border=2).place(x = 450, y = 0)
-      Button(addtag_wn, text = "Exit", width = 20, command=addtag_wn.destroy, border=2).place(x = 450, y = 40)
+      Button(addtag_wn, text = "Add tag", font=button_font, bg=button_background, width = 20, command=display_text, border=2).place(x = 450, y = 0)
+      Button(addtag_wn, text = "Exit", font=button_font, bg=button_background, width = 20, command=addtag_wn.destroy, border=2).place(x = 450, y = 40)
 
 def search_tag():
    searchtag_wn = Toplevel(root)
@@ -184,11 +186,14 @@ def search_tag():
                   else:
                      mb.showerror(title='Error!', message='No such file exists! It was deleted.')
    
-         Button(displayfiles_wn, text='Open File', command=selected_item, border = 2).place(x = 270, y = 210)
-         Button(displayfiles_wn, text = "Exit", command=displayfiles_wn.destroy, border=2).place(x = 350, y = 210)
+         Button(displayfiles_wn, text='Open File', font=button_font, bg=button_background, command=selected_item, border = 2).place(x = 270, y = 210)
+         Button(displayfiles_wn, text = "Exit", font=button_font, bg=button_background, command=displayfiles_wn.destroy, border=2).place(x = 350, y = 210)
 
    def get_tag():
       str = entry.get()
+      str = str.lower()
+      str = str.strip()
+      str = str.replace(" ","")
       entry.delete(0, END)
       if len(str) == 0:
          mb.showerror(title='Error!', message='Length of tag cannot be zero.')
@@ -198,8 +203,8 @@ def search_tag():
          display_files(str)
 
    entry.icursor(0)
-   Button(searchtag_wn, text = "Search Files", width = 20, command=get_tag).pack(pady = 20)
-   Button(searchtag_wn, text = "Exit", width = 20, command=searchtag_wn.destroy, border=2).pack(pady = 20)
+   Button(searchtag_wn, text = "Search Files", font=button_font, bg=button_background, width = 20, command=get_tag).pack(pady = 20)
+   Button(searchtag_wn, text = "Exit", font=button_font, bg=button_background, width = 20, command=searchtag_wn.destroy, border=2).pack(pady = 20)
 
 def remove_tags():
    z = 0
@@ -287,8 +292,8 @@ def remove_tags():
                   listbox.insert(END, ftags[z])
                   z += 1
 
-      Button(remove_wn, text='Remove Tag', command=remove_item, border = 2).place(x = 270, y = 210)
-      Button(remove_wn, text = "Exit", command=remove_wn.destroy, border=2).place(x = 350, y = 210)
+      Button(remove_wn, text='Remove Tag', font=button_font, bg=button_background, command=remove_item, border = 2).place(x = 270, y = 210)
+      Button(remove_wn, text = "Exit", font=button_font, bg=button_background, command=remove_wn.destroy, border=2).place(x = 350, y = 210)
    
 
 def get_tags():
@@ -329,7 +334,7 @@ def get_tags():
          listbox.insert(END, ftags[z])
          z += 1
 
-      Button(get_wn, text = "Exit", command=get_wn.destroy, border=2).place(x = 330, y = 210)
+      Button(get_wn, text = "Exit", font=button_font, bg=button_background, command=get_wn.destroy, border=2).place(x = 330, y = 210)
 
 # Defining the variables
 title = 'File Tagger'
