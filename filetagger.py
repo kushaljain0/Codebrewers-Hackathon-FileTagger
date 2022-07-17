@@ -171,6 +171,39 @@ def search_tag():
             listbox.insert(END, listfiles[z])
             z += 1
 
+         def remove_file(fileid):
+            with open("fileid-tags.json",'r+') as file:
+               # First we load existing data into a dict.
+               file_data = json.load(file)
+               file_data[fileid].remove(tag)
+
+               if len(file_data[fileid]) == 0:
+                  file_data.pop(fileid)
+               
+               # Sets file's current position at offset.
+               #newfile = open("new.json",'r+')
+               file.truncate(0)
+               file.seek(0)
+               # convert back to json.
+               #json.dump(file_data, newfile)
+               json.dump(file_data, file)
+
+            with open("tag-fileids.json",'r+') as file:
+               # First we load existing data into a dict.
+               file_data = json.load(file)
+               file_data[tag].remove(fileid)
+
+               if len(file_data[tag]) == 0:
+                  file_data.pop(tag)
+
+               # Sets file's current position at offset.
+               #newfile = open("new.json",'r+')
+               file.truncate(0)
+               file.seek(0)
+               # convert back to json.
+               #json.dump(file_data, newfile)
+               json.dump(file_data, file)
+
          def open_file(file):
             os.startfile(os.path.abspath(file))
 
@@ -185,9 +218,39 @@ def search_tag():
                      open_file(str)
                   else:
                      mb.showerror(title='Error!', message='No such file exists! It was deleted.')
-   
-         Button(displayfiles_wn, text='Open File', font=button_font, bg=button_background, command=selected_item, border = 2).place(x = 270, y = 210)
-         Button(displayfiles_wn, text = "Exit", font=button_font, bg=button_background, command=displayfiles_wn.destroy, border=2).place(x = 350, y = 210)
+         
+         def remove_item():
+            if len(listbox.curselection()) == 0:
+               mb.showerror(title='Error!', message='No File was Selected.')
+            else:
+               for i in listbox.curselection():
+                  str = idtopath(fileids[i])
+                  str = str.strip()
+                  if(os.path.exists(str)) :
+                     remove_file(fileids[i])
+                     fileids.remove(fileids[i])
+                     listbox.delete(0, END)
+                     z = 0
+                     while z < len(fileids):
+                        listbox.insert(END, fileids[z])
+                        z += 1
+                  else:
+                     mb.showerror(title='Error!', message='No such file exists! It was deleted.')
+
+         def remove_all():
+            for i in range(0, len(fileids)):
+               str = idtopath(fileids[i])
+               str = str.strip()
+               if(os.path.exists(str)) :
+                  remove_file(fileids[i])
+               else:
+                  mb.showerror(title='Error!', message='No such file exists! It was deleted.')
+            listbox.delete(0, END)
+
+         Button(displayfiles_wn, text='Open File', font=button_font, bg=button_background, command=selected_item, border = 2).place(x = 100, y = 210)
+         Button(displayfiles_wn, text='Remove File', font=button_font, bg=button_background, command=remove_item, border = 2).place(x = 195, y = 210)
+         Button(displayfiles_wn, text='Remove All Files', font=button_font, bg=button_background, command=remove_all, border = 2).place(x = 315, y = 210)
+         Button(displayfiles_wn, text = "Exit", font=button_font, bg=button_background, command=displayfiles_wn.destroy, border=2).place(x = 460, y = 210)
 
    def get_tag():
       str = entry.get()
@@ -253,14 +316,14 @@ def remove_tags():
 
             if len(file_data[fileid]) == 0:
                file_data.pop(fileid)
-            else:
-               # Sets file's current position at offset.
-               #newfile = open("new.json",'r+')
-               file.truncate(0)
-               file.seek(0)
-               # convert back to json.
-               #json.dump(file_data, newfile)
-               json.dump(file_data, file)
+            
+            # Sets file's current position at offset.
+            #newfile = open("new.json",'r+')
+            file.truncate(0)
+            file.seek(0)
+            # convert back to json.
+            #json.dump(file_data, newfile)
+            json.dump(file_data, file)
 
          with open("tag-fileids.json",'r+') as file:
             # First we load existing data into a dict.
@@ -269,14 +332,14 @@ def remove_tags():
 
             if len(file_data[tag]) == 0:
                file_data.pop(tag)
-            else:
-               # Sets file's current position at offset.
-               #newfile = open("new.json",'r+')
-               file.truncate(0)
-               file.seek(0)
-               # convert back to json.
-               #json.dump(file_data, newfile)
-               json.dump(file_data, file)
+
+            # Sets file's current position at offset.
+            #newfile = open("new.json",'r+')
+            file.truncate(0)
+            file.seek(0)
+            # convert back to json.
+            #json.dump(file_data, newfile)
+            json.dump(file_data, file)
 
       def remove_item():
          if len(listbox.curselection()) == 0:
@@ -292,9 +355,16 @@ def remove_tags():
                   listbox.insert(END, ftags[z])
                   z += 1
 
-      Button(remove_wn, text='Remove Tag', font=button_font, bg=button_background, command=remove_item, border = 2).place(x = 270, y = 210)
-      Button(remove_wn, text = "Exit", font=button_font, bg=button_background, command=remove_wn.destroy, border=2).place(x = 350, y = 210)
-   
+      def remove_all():
+         print(ftags)
+         for i in range(0,len(ftags)):
+            str = ftags[i]
+            remove_tag(str.strip())
+         listbox.delete(0, END)
+
+      Button(remove_wn, text='Remove Tag', font=button_font, bg=button_background, command=remove_item, border = 2).place(x = 170, y = 210)
+      Button(remove_wn, text='Remove All Tag', font=button_font, bg=button_background, command=remove_all, border = 2).place(x = 290, y = 210)
+      Button(remove_wn, text = "Exit", font=button_font, bg=button_background, command=remove_wn.destroy, border=2).place(x = 435, y = 210)
 
 def get_tags():
    z = 0
@@ -336,6 +406,37 @@ def get_tags():
 
       Button(get_wn, text = "Exit", font=button_font, bg=button_background, command=get_wn.destroy, border=2).place(x = 330, y = 210)
 
+#def remove_files_from_tag:
+
+def show_all_tags():
+   z = 0
+   with open("tag-fileids.json",'r+') as file:
+      # First we load existing data into a dict.
+      file_data = json.load(file)
+      tags = list()
+      tags = list(file_data.keys())
+
+   print(tags)
+   showall_wn = Toplevel(root)
+   showall_wn.title(f'All Tags Currently In Use')
+   showall_wn.geometry('720x240')
+   showall_wn.resizable(0,0)
+   showall_wn.grab_set()
+
+   listbox = Listbox(showall_wn, selectbackground='SteelBlue', font=("Georgia", 10), selectmode=SINGLE)
+   listbox.place(relx=0, rely=0, relheight=1, relwidth=1)
+
+   scrollbar = Scrollbar(listbox, orient=VERTICAL, command=listbox.yview)
+   scrollbar.pack(side=RIGHT, fill=Y)
+
+   listbox.config(yscrollcommand=scrollbar.set)
+
+   while z < len(tags):
+      listbox.insert(END, tags[z])
+      z += 1
+
+   Button(showall_wn, text = "Exit", font=button_font, bg=button_background, command=showall_wn.destroy, border=2).place(x = 330, y = 210)
+
 # Defining the variables
 title = 'File Tagger'
 background = 'White'
@@ -346,7 +447,7 @@ button_background = 'Turquoise'
 # Initializing the window
 root = Tk()
 root.title(title)
-root.geometry('560x100')
+root.geometry('680x100')
 root.resizable(0, 0)
 root.config(bg=background)
 
@@ -359,9 +460,11 @@ Button(root, text='Tag Search', width=10, font=button_font, bg=button_background
 
 Button(root, text='Remove tag', width=10, font=button_font, bg=button_background, command=remove_tags).place(x=230, y=20)
 
-Button(root, text='Get tags', width=10, font=button_font, bg=button_background, command=get_tags).place(x=340, y=20)
+Button(root, text='Get File tags', width=10, font=button_font, bg=button_background, command=get_tags).place(x=340, y=20)
 
-Button(root, text='Exit', width=10, font=button_font, bg=button_background, command=root.destroy).place(x=450, y=20)
+Button(root, text='Get All tags', width=10, font=button_font, bg=button_background, command=show_all_tags).place(x=450, y=20)
+
+Button(root, text='Exit', width=10, font=button_font, bg=button_background, command=root.destroy).place(x=560, y=20)
 
 # Finalizing the window
 root.update()
