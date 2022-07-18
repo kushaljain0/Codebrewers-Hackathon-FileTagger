@@ -10,6 +10,7 @@ def pathtoid(path):
    filepath = fr"{path}"
    #print(filepath)
    output = popen(fr"fsutil file queryfileid {filepath}").read()
+   print(output)
    l = list(output.split(" "))
    return l[3]
 
