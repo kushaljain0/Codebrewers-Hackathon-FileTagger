@@ -1,11 +1,14 @@
+# Import All Libraries
 from tkinter import *
 import tkinter.filedialog as fd
 import tkinter.messagebox as mb
 
 import os
 from os import popen
+
 import json
 
+# Function to convert path to fileid
 def pathtoid(path):
    filepath = fr"{path}"
    #print(filepath)
@@ -14,6 +17,7 @@ def pathtoid(path):
    l = list(output.split(" "))
    return l[3]
 
+# Function to convert fileid to path
 def idtopath(id):
    fileid = f"{id}"
    output = popen(fr"fsutil file queryfilenamebyid D:\ {fileid}").read()
@@ -108,6 +112,7 @@ def add_tag():
       Button(addtag_wn, text = "Add tag", font=button_font, bg=button_background, width = 20, command=display_text, border=2).place(x = 450, y = 0)
       Button(addtag_wn, text = "Exit", font=button_font, bg=button_background, width = 20, command=addtag_wn.destroy, border=2).place(x = 450, y = 40)
 
+# Function to search files with tag
 def search_tag():
    searchtag_wn = Toplevel(root)
    searchtag_wn.title(f'Search file with tag')
@@ -230,10 +235,11 @@ def search_tag():
                   if(os.path.exists(str)) :
                      remove_file(fileids[i])
                      fileids.remove(fileids[i])
+                     listfiles.remove(listfiles[i])
                      listbox.delete(0, END)
                      z = 0
-                     while z < len(fileids):
-                        listbox.insert(END, fileids[z])
+                     while z < len(listfiles):
+                        listbox.insert(END, listfiles[z])
                         z += 1
                   else:
                      mb.showerror(title='Error!', message='No such file exists! It was deleted.')
@@ -270,6 +276,7 @@ def search_tag():
    Button(searchtag_wn, text = "Search Files", font=button_font, bg=button_background, width = 20, command=get_tag).pack(pady = 20)
    Button(searchtag_wn, text = "Exit", font=button_font, bg=button_background, width = 20, command=searchtag_wn.destroy, border=2).pack(pady = 20)
 
+# Function to remove tag
 def remove_tags():
    z = 0
    path = fd.askopenfilename(title='Choose a file to add tag', filetypes=[("All files", "*.*")])
@@ -367,6 +374,7 @@ def remove_tags():
       Button(remove_wn, text='Remove All Tag', font=button_font, bg=button_background, command=remove_all, border = 2).place(x = 290, y = 210)
       Button(remove_wn, text = "Exit", font=button_font, bg=button_background, command=remove_wn.destroy, border=2).place(x = 435, y = 210)
 
+# Function to get tags of a file
 def get_tags():
    z = 0
    path = fd.askopenfilename(title='Choose a file to add tag', filetypes=[("All files", "*.*")])
@@ -407,8 +415,7 @@ def get_tags():
 
       Button(get_wn, text = "Exit", font=button_font, bg=button_background, command=get_wn.destroy, border=2).place(x = 330, y = 210)
 
-#def remove_files_from_tag:
-
+# Function to show all tags currently in use
 def show_all_tags():
    z = 0
    with open("tag-fileids.json",'r+') as file:
